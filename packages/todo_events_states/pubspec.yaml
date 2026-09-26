@@ -1,0 +1,23 @@
+name: todo_events_states
+description: Events và States cho các BLoCs trong Todo app
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable: ^2.0.5
+  todo_core:
+    path: ../todo_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

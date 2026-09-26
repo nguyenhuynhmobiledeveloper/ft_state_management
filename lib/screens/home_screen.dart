@@ -1,22 +1,14 @@
 // HomeScreen - Màn hình chính của ứng dụng
 // Demo: BlocBuilder, BlocListener, BlocConsumer, context.read(), context.watch()
 
+import 'package:demo_ft_bloc/screens/add_todo_screen.dart';
+import 'package:demo_ft_bloc/screens/edit_todo_screen.dart';
+import 'package:demo_ft_bloc/screens/statistics_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/todo_bloc.dart';
-import '../blocs/filter_bloc.dart';
-import '../blocs/search_bloc.dart';
-import '../blocs/filtered_todos_bloc.dart';
-import '../events/todo_event.dart';
-import '../events/filter_event.dart';
-import '../events/search_event.dart';
-import '../states/todo_state.dart';
-import '../states/filter_state.dart';
-import '../states/search_state.dart';
-import '../models/todo_filter.dart';
-import 'add_todo_screen.dart';
-import 'edit_todo_screen.dart';
-import 'statistics_screen.dart';
+import 'package:todo_blocs/todo_blocs.dart';
+import 'package:todo_core/todo_core.dart';
+import 'package:todo_events_states/todo_events_states.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -35,12 +27,12 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               // Capture BLoC TRƯỚC khi navigate (context bên ngoài có access)
               final todoBloc = context.read<TodoBloc>();
-              
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (newContext) => BlocProvider.value(
-                    value: todoBloc,  // Dùng captured BLoC
+                    value: todoBloc, // Dùng captured BLoC
                     child: const StatisticsScreen(),
                   ),
                 ),
@@ -70,13 +62,13 @@ class HomeScreen extends StatelessWidget {
         children: [
           // Search bar
           _buildSearchBar(),
-          
+
           // Filter chips
           _buildFilterChips(),
-          
+
           // Statistics
           _buildStatistics(),
-          
+
           // Todo list
           const Expanded(
             child: _TodoList(),
@@ -87,12 +79,12 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           // Capture BLoC TRƯỚC khi navigate (context bên ngoài có access)
           final todoBloc = context.read<TodoBloc>();
-          
+
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (newContext) => BlocProvider.value(
-                value: todoBloc,  // Dùng captured BLoC
+                value: todoBloc, // Dùng captured BLoC
                 child: const AddTodoScreen(),
               ),
             ),
@@ -284,7 +276,7 @@ class _TodoList extends StatelessWidget {
             ),
           );
         }
-        
+
         // Show error snackbar khi có TodoError
         if (state is TodoError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -352,7 +344,7 @@ class _TodoList extends StatelessWidget {
 
 // Widget riêng cho Todo Item
 class _TodoItem extends StatelessWidget {
-  final dynamic todo;
+  final Todo todo;
 
   const _TodoItem({required this.todo});
 
@@ -371,9 +363,8 @@ class _TodoItem extends StatelessWidget {
         title: Text(
           todo.title,
           style: TextStyle(
-            decoration: todo.isCompleted 
-                ? TextDecoration.lineThrough 
-                : null,
+            decoration:
+                todo.isCompleted ? TextDecoration.lineThrough : null,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -382,9 +373,8 @@ class _TodoItem extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            decoration: todo.isCompleted 
-                ? TextDecoration.lineThrough 
-                : null,
+            decoration:
+                todo.isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),
         trailing: Row(
@@ -395,12 +385,12 @@ class _TodoItem extends StatelessWidget {
               onPressed: () {
                 // Capture BLoC TRƯỚC khi navigate
                 final todoBloc = context.read<TodoBloc>();
-                
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (newContext) => BlocProvider.value(
-                      value: todoBloc,  // Dùng captured BLoC
+                      value: todoBloc, // Dùng captured BLoC
                       child: EditTodoScreen(todo: todo),
                     ),
                   ),

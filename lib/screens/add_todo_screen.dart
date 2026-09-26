@@ -3,8 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/todo_bloc.dart';
-import '../events/todo_event.dart';
+import 'package:todo_blocs/todo_blocs.dart';
+import 'package:todo_events_states/todo_events_states.dart';
 
 class AddTodoScreen extends StatefulWidget {
   const AddTodoScreen({super.key});

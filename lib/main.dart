@@ -1,16 +1,14 @@
 // Main entry point của ứng dụng
 // Demo cách setup BlocObserver và MultiBlocProvider
+//
+// Sau khi tách package: app shell chỉ sử dụng các BLoCs từ packages
 
-import 'package:demo_ft_bloc/events/todo_event.dart';
+import 'package:demo_ft_bloc/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'blocs/simple_bloc_observer.dart';
-import 'blocs/todo_bloc.dart';
-import 'blocs/filter_bloc.dart';
-import 'blocs/search_bloc.dart';
-import 'blocs/filtered_todos_bloc.dart';
-import 'repositories/todo_repository.dart';
-import 'screens/home_screen.dart';
+import 'package:todo_blocs/todo_blocs.dart';
+import 'package:todo_core/todo_core.dart';
+import 'package:todo_events_states/todo_events_states.dart';
 
 void main() {
   // Setup BlocObserver để log tất cả BLoC activities

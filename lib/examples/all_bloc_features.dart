@@ -3,9 +3,11 @@
  * File này chứa ví dụ code về cách sử dụng mọi widget và method của BLoC
  */
 
-// ==================== 1. BLOC CLASS ====================
-
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// ==================== 1. BLOC CLASS ====================
 
 // Định nghĩa Bloc với Events và States
 class ExampleBloc extends Bloc<ExampleEvent, ExampleState> {
@@ -24,7 +26,7 @@ class ExampleBloc extends Bloc<ExampleEvent, ExampleState> {
       // - restartable(): Cancel operation cũ khi có event mới
       // - droppable(): Bỏ qua event mới nếu đang xử lý
       // - debounce(): Delay xử lý event
-      transformer: debounce(const Duration(milliseconds: 300)),
+      transformer: debounceTime(const Duration(milliseconds: 300)),
     );
   }
 
@@ -129,8 +131,6 @@ void setupBlocObserver() {
 }
 
 // ==================== 3. BLOC PROVIDER WIDGETS ====================
-
-import 'package:flutter/material.dart';
 
 // ✅ BlocProvider - Cung cấp một BLoC cho widget tree
 class BlocProviderExample extends StatelessWidget {
@@ -502,8 +502,6 @@ class BlocUtilitiesExample {
 
 // ==================== 12. STREAM TRANSFORMERS ====================
 
-import 'package:bloc_concurrency/bloc_concurrency.dart';
-
 class StreamTransformersExample extends Bloc<dynamic, dynamic> {
   StreamTransformersExample() : super(null) {
     // ✅ sequential() - Xử lý events tuần tự (default)
@@ -533,7 +531,7 @@ class StreamTransformersExample extends Bloc<dynamic, dynamic> {
     // ✅ debounce() - Delay xử lý event
     on<Event5>(
       _handler,
-      transformer: debounce(const Duration(milliseconds: 300)),
+      transformer: debounceTime(const Duration(milliseconds: 300)),
     );
   }
   

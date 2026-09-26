@@ -1,0 +1,50 @@
+name: ft_state_management
+
+packages:
+  - .
+  - packages/*
+  - packages/*/example
+
+command:
+  bootstrap:
+    runPubGetInParallel: false
+    usePubspecOverrides: true
+
+scripts:
+  analyze:
+    description: Run `flutter analyze` in all packages.
+    exec: flutter analyze
+    execOptions:
+      concurrency: 1
+
+  format:
+    description: Run `dart format` in all packages.
+    exec: dart format .
+    execOptions:
+      concurrency: 1
+
+  format-check:
+    description: Check that all files are formatted correctly.
+    exec: dart format --output=none --set-exit-if-changed .
+    execOptions:
+      concurrency: 1
+
+  test:
+    description: Run `flutter test` in all packages.
+    exec: flutter test
+    execOptions:
+      concurrency: 1
+      failFast: false
+
+  clean:
+    description: Run `flutter clean` in all packages.
+    exec: flutter clean
+    execOptions:
+      concurrency: 1
+
+  version-all:
+    description: Show current version of all packages.
+    exec: melos list --long
+
+ide:
+  intellij: false

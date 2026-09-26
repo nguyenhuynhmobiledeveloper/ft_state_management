@@ -3,9 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/todo_bloc.dart';
-import '../events/todo_event.dart';
-import '../models/todo.dart';
+import 'package:todo_blocs/todo_blocs.dart';
+import 'package:todo_core/todo_core.dart';
+import 'package:todo_events_states/todo_events_states.dart';
 
 class EditTodoScreen extends StatefulWidget {
   final Todo todo;
@@ -29,7 +29,8 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
     super.initState();
     // Khởi tạo controllers với giá trị hiện tại của todo
     _titleController = TextEditingController(text: widget.todo.title);
-    _descriptionController = TextEditingController(text: widget.todo.description);
+    _descriptionController =
+        TextEditingController(text: widget.todo.description);
   }
 
   @override

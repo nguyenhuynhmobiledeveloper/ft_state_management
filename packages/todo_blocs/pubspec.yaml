@@ -1,0 +1,30 @@
+name: todo_blocs
+description: Tất cả BLoCs (business logic) cho Todo app
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.1
+  equatable: ^2.0.5
+  bloc_concurrency: ^0.2.2
+  rxdart: ^0.27.7
+  todo_core:
+    path: ../todo_core
+  todo_events_states:
+    path: ../todo_events_states
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  bloc_test: ^9.1.4
+  mocktail: ^0.3.0
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

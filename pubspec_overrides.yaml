@@ -1,0 +1,8 @@
+# melos_managed_dependency_overrides: todo_blocs,todo_core,todo_events_states
+dependency_overrides:
+  todo_blocs:
+    path: packages/todo_blocs
+  todo_core:
+    path: packages/todo_core
+  todo_events_states:
+    path: packages/todo_events_states

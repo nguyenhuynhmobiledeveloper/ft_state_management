@@ -1,162 +1,96 @@
-27/9/2022: Học về Quản lý state Bằng Bloc 
+# ft_state_management
 
+Flutter BLoC Pattern Demo - Monorepo với Melos.
 
-Có 2 trường phái sử dụng Bloc
-1: Dùng cubit :UI Đẩy hàm nhận state
-2: Dùng bloc : UI Đẩy events nhận state
+## Cấu trúc Monorepo
 
-Bloc bao gồm 1 số packages
-bloc : Core bloc library 
-flutter_bloc: Bloc cho flutter
-angular_bloc: Bloc cho angular web 
+```
+ft_state_management/
+├── melos.yaml                    # Melos config
+├── pubspec.yaml                  # App shell (demo_ft_bloc)
+├── lib/                          # App shell - chỉ chứa UI
+│   ├── main.dart
+│   ├── screens/                  # Màn hình UI
+│   └── examples/                 # Demo code (giữ nguyên)
+└── packages/
+    ├── todo_core/                # Models, Repository, BlocObserver, Extensions
+    ├── todo_events_states/       # Events & States cho các BLoCs
+    └── todo_blocs/               # Tất cả BLoCs (business logic)
+```
 
-#  https://bloclibrary.dev/#/coreconcepts
-bản chất sâu sa của của bloc là sử dụng Stream của Dart
-Stream như 1 ống nước , và các data là nước chảy trong ống nước đó
+## Dependency Graph
 
-a stream is a sequence of asynchronous data
+```
+demo_ft_bloc (app shell)
+    ├── todo_blocs
+    │    ├── todo_events_states
+    │    │    └── todo_core
+    │    └── todo_core
+    ├── todo_events_states
+    │    └── todo_core
+    └── todo_core
+```
 
-cubit phơi bày ra các hàm để có thể kích hoạt sự thay đổi của state
+## Cài đặt & Sử dụng
 
-state là đầu ra của cubit và đại diện cho một phần trạng thái của ứng dụng
-Các thành phần giao diện người dùng có thể được thông báo về sự thay đổi state và render lại giao diện dựa theo state hiện tại 
+### Yêu cầu
 
-có thể tạo 1 Stream bằng hàm async*
+- Flutter SDK >= 3.0
+- Dart SDK >= 2.17.6
+- [Melos](https://melos.invertase.dev/) - để quản lý monorepo
 
-Stream<int> countStream(int max) async* {
-  for (int i = 0; i < max; i++) {
-    yield i;
-  }
-}
+### Bootstrap monorepo
 
-sử dụng async* có thể sử dụng yield : mỗi lần gặp yield là đẩy 1 giá trị ra khỏi luồng stream 
+```bash
+# Cài Melos (1 lần)
+dart pub global activate melos
 
-Có thể sử dụng Stream theo 1 số cách 
-Nếu muốn trả về 1 tổng các 1 luồng stream các số nguyên thì có thể dùng return
+# Bootstrap tất cả packages (liên kết path dependencies)
+melos bootstrap
+```
 
-Future<int> sumStream(Stream<int> stream) async {
-  // stream ở đây là 1 Stream<int>  -> 1 luồng số nguyên -> 1 list số nguyên
-  int sum = 0;
-  await for (int value in stream) {
-    // Vì Stream là async* 1 hàm bất đồng bộ nên hàm sumStream cũng phải là 1 hàm bất đồng bộ --> phải dùng await để hứng kết quả bất đồng bộ
-    sum += value;
-  }
-  return sum;
-}
+### Các lệnh Melos thường dùng
 
+```bash
+# Phân tích code trong tất cả packages
+melos run analyze
 
-We can put it all together like so:
+# Format code trong tất cả packages
+melos run format
 
-void main() async {
-  /// Initialize a stream of integers 0-9
-  Stream<int> stream = countStream(10);
+# Kiểm tra format
+melos run format-check
 
-  /// Compute the sum of the stream of integers
-  int sum = await sumStream(stream);
+# Chạy tests trong tất cả packages
+melos run test
 
-  /// Print the sum
-  print(sum); // 45
-}
+# Xem danh sách packages
+melos list
 
+# Xem version của tất cả packages
+melos run version-all
+```
 
-Cubit là class kế thừa từ BlocBase và có thể quản lý bất kỳ loại state nào 
+### Chạy app
 
-Cubit phơi ra các hàm để UI gọi ==> thay đổi State 
+```bash
+flutter run
+```
 
+## Packages
 
-Bước 1 tạo 1 Cubit 
+| Package | Mô tả |
+|---------|--------|
+| `todo_core` | Models (`Todo`, `TodoFilter`), Repository (`TodoRepository`), `SimpleBlocObserver`, Bloc extensions |
+| `todo_events_states` | Tất cả Events & States cho 4 BLoCs: Todo, Filter, Search, FilteredTodos |
+| `todo_blocs` | 4 BLoCs: `TodoBloc`, `FilterBloc`, `SearchBloc`, `FilteredTodosBloc` |
+| `demo_ft_bloc` (app shell) | UI: `main.dart`, `screens/`, `examples/` |
 
-class NameCubit extends Cubit<int> {
-NameCubit(int initialState) : super(initialState);  //initialState Là giá trị khởi tạo của state thường để là 1 đối tượng Kế thừa từ class có method tự viết là copyWith()
-}
+## Lợi ích của việc tách package
 
-Ví dụ : cubit tăng giảm 1 số
-class CounterCubit extends Cubit<int> {
-CounterCubit() : super(0);
-}
-
-//Tạo ra 1 cubit từ class Cubit
-
-final cubitA = CounterCubit(0); // state starts at 0
-final cubitB = CounterCubit(10); // state starts at 10
-
-B2: Thay đổi state
-Cubit có khả năng output ra state bằng emit
-
-class CounterCubit extends Cubit<int> {
-CounterCubit() : super(0);
-
-void increment() => emit(state + 1);   //Hàm increment() chính là để UI gọi dùng
-void decrement() => emit(state - 1);
-}
-
-
-B3 : Tạo Khai báo ra 1 Bloc và phạm vi bao phủ của nó
-
-void main() => runApp(CounterApp());
-
-class CounterApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: BlocProvider(
-        create: (_) => CounterCubit(),
-        child: CounterPage(),
-      ),
-    );
-  }
-}
-
-
-
-B4: Ở UI gọi cubit và sử dụng thay đổi state- nhận state
-class CounterPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Counter')),
-      body: BlocBuilder<CounterCubit, int>(
-        //Tham số thứ 2 của BlocBuilder chính là state
-        builder: (context, count) => Center(
-            child: Text(
-                '$count')), //count Đây chính là State dạng int của cubit CounterCubit
-      ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () => context.read<CounterCubit>().increment(),
-          ),
-          const SizedBox(height: 4),
-          FloatingActionButton(
-            child: const Icon(Icons.remove),
-            onPressed: () => context.read<CounterCubit>().decrement(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-# 9/10/2022
-Bloc là 1 tập hợp các thư viện bloc-core bloc library 
-Flutter_bloc : Sử dụng cho nền tảng Flutter
-Angular_bloc: Sử dụng cho nền tảng front end Angular 
-
-
------> Flutter Bloc bên trong có 
-BlocBuilder
-BlocSelector
-BLocProvider
-MultiBlocProvider
-BlocListener
-MultiBlocListener
-BlocConsumer
-RepositoryProvider
-MultiRepositoryProvider
-
-# demo_ft_bloc
+1. **Tách concerns rõ ràng**: UI / business logic / data layer được tách biệt
+2. **Dễ test**: Mỗi package có thể test độc lập với `bloc_test`
+3. **Tái sử dụng**: Có thể publish các package này lên pub.dev sau này
+4. **Quản lý version độc lập**: Mỗi package có version riêng
+5. **CI/CD đơn giản**: Có thể test/build từng package riêng biệt
+6. **Parallel development**: Nhiều người có thể làm việc trên các package khác nhau

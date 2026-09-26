@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: todo_core
+dependency_overrides:
+  todo_core:
+    path: ../todo_core

@@ -3,10 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/todo_bloc.dart';
-import '../blocs/filtered_todos_bloc.dart';
-import '../states/todo_state.dart';
-import '../models/todo.dart';
+import 'package:todo_blocs/todo_blocs.dart';
+import 'package:todo_core/todo_core.dart';
+import 'package:todo_events_states/todo_events_states.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -87,8 +86,8 @@ class StatisticsScreen extends StatelessWidget {
     final totalCount = todos.length;
     final completedCount = todos.where((todo) => todo.isCompleted).length;
     final activeCount = totalCount - completedCount;
-    final completionRate = totalCount > 0 
-        ? (completedCount / totalCount * 100).toStringAsFixed(1) 
+    final completionRate = totalCount > 0
+        ? (completedCount / totalCount * 100).toStringAsFixed(1)
         : '0.0';
 
     return Column(
@@ -204,25 +203,25 @@ class StatisticsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   ...todos.take(5).map((todo) => ListTile(
-                    leading: Icon(
-                      todo.isCompleted
-                          ? Icons.check_circle
-                          : Icons.radio_button_unchecked,
-                      color: todo.isCompleted ? Colors.green : Colors.orange,
-                    ),
-                    title: Text(
-                      todo.title,
-                      style: TextStyle(
-                        decoration: todo.isCompleted
-                            ? TextDecoration.lineThrough
-                            : null,
-                      ),
-                    ),
-                    subtitle: Text(
-                      _formatDate(todo.createdAt),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  )),
+                        leading: Icon(
+                          todo.isCompleted
+                              ? Icons.check_circle
+                              : Icons.radio_button_unchecked,
+                          color: todo.isCompleted ? Colors.green : Colors.orange,
+                        ),
+                        title: Text(
+                          todo.title,
+                          style: TextStyle(
+                            decoration: todo.isCompleted
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                        subtitle: Text(
+                          _formatDate(todo.createdAt),
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      )),
                 ],
               ),
             ),
