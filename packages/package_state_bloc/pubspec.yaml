@@ -1,0 +1,15 @@
+name: package_state_bloc
+description: Todo BLoC state management example and Flutter screens.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=2.17.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.1
+  equatable: ^2.0.5
+  bloc_concurrency: ^0.2.2
+  rxdart: ^0.27.7
