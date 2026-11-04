@@ -1,0 +1,15 @@
+name: package_state_bloc_todolist
+description: Todo list example using BLoC and shared preferences.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.6
+  equatable: ^2.1.0
+  shared_preferences: ^2.5.5
+  bloc_concurrency: ^0.2.5
