@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Consumer(
           builder: (_,  watch, __) {
-            final value = watch(valueProvider);
+            final value = watch;
             return Text(
               'Value: $value',
               // style: Theme.of(context).textTheme.headline4,
