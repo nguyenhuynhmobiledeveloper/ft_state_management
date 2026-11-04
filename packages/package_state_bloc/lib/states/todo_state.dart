@@ -12,47 +12,50 @@ abstract class TodoState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Các class dưới chính là các trạng thái tồn tại khác nhau của state trong bloc
 // State: Trạng thái khởi tạo ban đầu
-class TodoInitial extends TodoState {
-  const TodoInitial();
+class TodoInitialState extends TodoState {
+  const TodoInitialState();
 }
 
 // State: Đang load dữ liệu
-class TodoLoading extends TodoState {
-  const TodoLoading();
+class TodoLoadingState extends TodoState {
+  const TodoLoadingState();
 }
 
 // State: Load thành công, chứa danh sách todos
-class TodoLoaded extends TodoState {
+class TodoLoadedState extends TodoState {
+  // Chứa danh sách todo
   final List<Todo> todos;
 
-  const TodoLoaded(this.todos);
+  const TodoLoadedState(this.todos);
 
   @override
   List<Object?> get props => [todos];
 }
 
 // State: Có lỗi xảy ra
-class TodoError extends TodoState {
+class TodoErrorState extends TodoState {
   final String message;
 
-  const TodoError(this.message);
+  const TodoErrorState(this.message);
 
   @override
   List<Object?> get props => [message];
 }
 
-// State: Đang thực hiện một operation (add, update, delete...)
-// Kế thừa từ TodoLoaded để vẫn hiển thị danh sách todos trong khi xử lý
-class TodoOperationInProgress extends TodoLoaded {
-  const TodoOperationInProgress(super.todos);
+// State: Đang thực hiện một thao tác operation (add, update, delete...)
+// Kế thừa từ TodoLoadedState để vẫn hiển thị danh sách todos trong khi xử lý
+class TodoOperationInProgressState extends TodoLoadedState {
+  const TodoOperationInProgressState(super.todos);
 }
 
-// State: Operation thành công
-class TodoOperationSuccess extends TodoLoaded {
+// State: Thể hiện thao tác thay đổi danh sách todo đã Operation thành công + kèm 1 tin nhắn
+// Danh sách todo mới hiện tại là tham số todo vừa được khởi tạo
+class TodoOperationSuccessState extends TodoLoadedState {
   final String message;
 
-  const TodoOperationSuccess(super.todos, this.message);
+  const TodoOperationSuccessState(super.todos, this.message);
 
   @override
   List<Object?> get props => [todos, message];

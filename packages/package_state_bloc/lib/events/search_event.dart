@@ -11,16 +11,16 @@ abstract class SearchEvent extends Equatable {
 
 // Event: Thay đổi search query
 // Sẽ sử dụng debounce transformer để tránh search quá nhiều lần
-class SearchQueryChanged extends SearchEvent {
+class SearchQueryChangedEvent extends SearchEvent {
   final String query;
 
-  const SearchQueryChanged(this.query);
+  const SearchQueryChangedEvent(this.query);
 
   @override
   List<Object?> get props => [query];
 }
 
 // Event: Clear search query
-class SearchQueryCleared extends SearchEvent {
-  const SearchQueryCleared();
+class SearchQueryClearedEvent extends SearchEvent {
+  const SearchQueryClearedEvent();
 }

@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/filter_bloc.dart';
 import 'blocs/filtered_todos_bloc.dart';
 import 'blocs/search_bloc.dart';
-import 'blocs/simple_bloc_observer.dart';
+import 'observer/simple_bloc_observer.dart';
 import 'blocs/todo_bloc.dart';
 import 'events/todo_event.dart';
 import 'repositories/todo_repository.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             create: (context) {
               final bloc = TodoBloc(repository: todoRepository);
               bloc.add(
-                  const TodoLoadRequested()); // Load todos ngay khi khởi tạo
+                  const TodoLoadRequestedEvent()); // Load todos ngay khi khởi tạo
               return bloc;
             },
           ),

@@ -8,11 +8,12 @@ export 'main.dart' show MyApp, runPackageStateBlocApp;
 export 'blocs/filter_bloc.dart';
 export 'blocs/filtered_todos_bloc.dart';
 export 'blocs/search_bloc.dart';
-export 'blocs/simple_bloc_observer.dart';
+export 'observer/simple_bloc_observer.dart';
 export 'blocs/todo_bloc.dart';
 
 // Event.
 export 'events/filter_event.dart';
+export 'events/filtered_todos_event.dart';
 export 'events/search_event.dart';
 export 'events/todo_event.dart';
 
@@ -29,6 +30,7 @@ export 'screens/statistics_screen.dart';
 
 // State.
 export 'states/filter_state.dart';
+export 'states/filtered_todos_state.dart';
 export 'states/search_state.dart';
 export 'states/todo_state.dart';
 export 'main.dart';

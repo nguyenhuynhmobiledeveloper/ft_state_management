@@ -13,16 +13,17 @@ abstract class TodoEvent extends Equatable {
 }
 
 // Event: Load danh sách todos từ repository
-class TodoLoadRequested extends TodoEvent {
-  const TodoLoadRequested();
+class TodoLoadRequestedEvent extends TodoEvent {
+  const TodoLoadRequestedEvent();
 }
 
-// Event: Thêm todo mới
-class TodoAdded extends TodoEvent {
+// Event: Thêm todo mới vào danh sách todo
+// event này nhận 2 tham số là title và description
+class TodoAddedEvent extends TodoEvent {
   final String title;
   final String description;
 
-  const TodoAdded({
+  const TodoAddedEvent({
     required this.title,
     required this.description,
   });
@@ -31,42 +32,43 @@ class TodoAdded extends TodoEvent {
   List<Object?> get props => [title, description];
 }
 
-// Event: Cập nhật todo hiện có
-class TodoUpdated extends TodoEvent {
+// Event: Cập nhật một todo hiện có
+// nhận 1 tham số là 1 đối tượng todo
+class TodoUpdatedEvent extends TodoEvent {
   final Todo todo;
 
-  const TodoUpdated(this.todo);
+  const TodoUpdatedEvent(this.todo);
 
   @override
   List<Object?> get props => [todo];
 }
 
-// Event: Xóa todo
-class TodoDeleted extends TodoEvent {
+// Event: Xóa một todo
+class TodoDeletedEvent extends TodoEvent {
   final String todoId;
 
-  const TodoDeleted(this.todoId);
+  const TodoDeletedEvent(this.todoId);
 
   @override
   List<Object?> get props => [todoId];
 }
 
-// Event: Toggle trạng thái completed của todo
-class TodoToggled extends TodoEvent {
+// Event: Toggle trạng thái completed của một todo
+class TodoToggledEvent extends TodoEvent {
   final String todoId;
 
-  const TodoToggled(this.todoId);
+  const TodoToggledEvent(this.todoId);
 
   @override
   List<Object?> get props => [todoId];
 }
 
 // Event: Xóa tất cả todos đã hoàn thành
-class TodoClearCompleted extends TodoEvent {
-  const TodoClearCompleted();
+class TodoClearCompletedEvent extends TodoEvent {
+  const TodoClearCompletedEvent();
 }
 
 // Event: Toggle tất cả todos (complete hoặc uncomplete all)
-class TodoToggleAll extends TodoEvent {
-  const TodoToggleAll();
+class TodoToggleAllEvent extends TodoEvent {
+  const TodoToggleAllEvent();
 }

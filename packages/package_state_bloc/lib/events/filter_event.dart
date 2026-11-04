@@ -10,11 +10,11 @@ abstract class FilterEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Event: Thay đổi filter
-class FilterChanged extends FilterEvent {
+// Event: Thay đổi giá trị filter - nhận vào 1 giá trị enum của TodoFilter
+class FilterChangedEvent extends FilterEvent {
   final TodoFilter filter;
 
-  const FilterChanged(this.filter);
+  const FilterChangedEvent(this.filter);
 
   @override
   List<Object?> get props => [filter];

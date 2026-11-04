@@ -1,9 +1,11 @@
 // SimpleBlocObserver - Observer để log tất cả các events, states, transitions và errors
 // Rất hữu ích cho debugging
+// Lắng nghe bắt được hết tất cả các sự kiện thao tác với bloc trong app
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// Thiết lập observer trước khi tạo BLoC và chạy ứng dụng ví dụ.
 class SimpleBlocObserver extends BlocObserver {
   // onChange được gọi mỗi khi state của bất kỳ BLoC nào thay đổi
   @override

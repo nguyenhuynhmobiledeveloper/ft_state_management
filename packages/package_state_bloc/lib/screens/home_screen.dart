@@ -12,6 +12,7 @@ import '../events/filter_event.dart';
 import '../events/search_event.dart';
 import '../states/todo_state.dart';
 import '../states/filter_state.dart';
+import '../states/filtered_todos_state.dart';
 import '../states/search_state.dart';
 import '../models/todo_filter.dart';
 import 'add_todo_screen.dart';
@@ -35,12 +36,12 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               // Capture BLoC TRƯỚC khi navigate (context bên ngoài có access)
               final todoBloc = context.read<TodoBloc>();
-              
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (newContext) => BlocProvider.value(
-                    value: todoBloc,  // Dùng captured BLoC
+                    value: todoBloc, // Dùng captured BLoC
                     child: const StatisticsScreen(),
                   ),
                 ),
@@ -52,7 +53,7 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               // Dispatch event để reload todos
-              context.read<TodoBloc>().add(const TodoLoadRequested());
+              context.read<TodoBloc>().add(const TodoLoadRequestedEvent());
             },
             tooltip: 'Refresh',
           ),
@@ -60,7 +61,7 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.delete_sweep),
             onPressed: () {
               // Dispatch event để xóa todos đã hoàn thành
-              context.read<TodoBloc>().add(const TodoClearCompleted());
+              context.read<TodoBloc>().add(const TodoClearCompletedEvent());
             },
             tooltip: 'Clear Completed',
           ),
@@ -70,13 +71,13 @@ class HomeScreen extends StatelessWidget {
         children: [
           // Search bar
           _buildSearchBar(),
-          
+
           // Filter chips
           _buildFilterChips(),
-          
+
           // Statistics
           _buildStatistics(),
-          
+
           // Todo list
           const Expanded(
             child: _TodoList(),
@@ -87,12 +88,12 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           // Capture BLoC TRƯỚC khi navigate (context bên ngoài có access)
           final todoBloc = context.read<TodoBloc>();
-          
+
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (newContext) => BlocProvider.value(
-                value: todoBloc,  // Dùng captured BLoC
+                value: todoBloc, // Dùng captured BLoC
                 child: const AddTodoScreen(),
               ),
             ),
@@ -121,8 +122,8 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {
                         // Dispatch event để clear search
                         context.read<SearchBloc>().add(
-                          const SearchQueryCleared(),
-                        );
+                              const SearchQueryClearedEvent(),
+                            );
                       },
                     )
                   : null,
@@ -134,8 +135,8 @@ class HomeScreen extends StatelessWidget {
               // Dispatch event khi user gõ
               // SearchBloc sẽ debounce và chỉ xử lý sau 300ms
               context.read<SearchBloc>().add(
-                SearchQueryChanged(value),
-              );
+                    SearchQueryChangedEvent(value),
+                  );
             },
           );
         },
@@ -193,7 +194,7 @@ class HomeScreen extends StatelessWidget {
       onSelected: (selected) {
         if (selected) {
           // Dispatch event để thay đổi filter
-          context.read<FilterBloc>().add(FilterChanged(filter));
+          context.read<FilterBloc>().add(FilterChangedEvent(filter));
         }
       },
     );
@@ -206,7 +207,7 @@ class HomeScreen extends StatelessWidget {
       // Demo BlocBuilder với FilteredTodosBloc
       child: BlocBuilder<FilteredTodosBloc, FilteredTodosState>(
         builder: (context, state) {
-          if (state is FilteredTodosLoaded) {
+          if (state is FilteredTodosLoadedState) {
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -274,8 +275,8 @@ class _TodoList extends StatelessWidget {
     return BlocListener<TodoBloc, TodoState>(
       // listener được gọi mỗi khi TodoState thay đổi
       listener: (context, state) {
-        // Show snackbar khi có TodoOperationSuccess
-        if (state is TodoOperationSuccess) {
+        // Show snackbar khi có TodoOperationSuccessState
+        if (state is TodoOperationSuccessState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
@@ -284,9 +285,9 @@ class _TodoList extends StatelessWidget {
             ),
           );
         }
-        
-        // Show error snackbar khi có TodoError
-        if (state is TodoError) {
+
+        // Show error snackbar khi có TodoErrorState
+        if (state is TodoErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
@@ -299,13 +300,13 @@ class _TodoList extends StatelessWidget {
       // Child là BlocBuilder để build UI dựa trên state
       child: BlocBuilder<FilteredTodosBloc, FilteredTodosState>(
         builder: (context, filteredState) {
-          if (filteredState is FilteredTodosLoading) {
+          if (filteredState is FilteredTodosLoadingState) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (filteredState is FilteredTodosLoaded) {
+          if (filteredState is FilteredTodosLoadedState) {
             final todos = filteredState.filteredTodos;
 
             if (todos.isEmpty) {
@@ -330,7 +331,7 @@ class _TodoList extends StatelessWidget {
                       },
                     ),
                     // Show loading overlay
-                    if (todoState is TodoOperationInProgress)
+                    if (todoState is TodoOperationInProgressState)
                       Container(
                         color: Colors.black.withAlpha(77),
                         child: const Center(
@@ -365,15 +366,13 @@ class _TodoItem extends StatelessWidget {
           value: todo.isCompleted,
           onChanged: (value) {
             // Dispatch event để toggle todo
-            context.read<TodoBloc>().add(TodoToggled(todo.id));
+            context.read<TodoBloc>().add(TodoToggledEvent(todo.id));
           },
         ),
         title: Text(
           todo.title,
           style: TextStyle(
-            decoration: todo.isCompleted 
-                ? TextDecoration.lineThrough 
-                : null,
+            decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -382,9 +381,7 @@ class _TodoItem extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            decoration: todo.isCompleted 
-                ? TextDecoration.lineThrough 
-                : null,
+            decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),
         trailing: Row(
@@ -395,12 +392,12 @@ class _TodoItem extends StatelessWidget {
               onPressed: () {
                 // Capture BLoC TRƯỚC khi navigate
                 final todoBloc = context.read<TodoBloc>();
-                
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (newContext) => BlocProvider.value(
-                      value: todoBloc,  // Dùng captured BLoC
+                      value: todoBloc, // Dùng captured BLoC
                       child: EditTodoScreen(todo: todo),
                     ),
                   ),
@@ -425,8 +422,8 @@ class _TodoItem extends StatelessWidget {
                         onPressed: () {
                           // Dispatch event để xóa todo
                           context.read<TodoBloc>().add(
-                            TodoDeleted(todo.id),
-                          );
+                                TodoDeletedEvent(todo.id),
+                              );
                           Navigator.pop(dialogContext);
                         },
                         child: const Text(

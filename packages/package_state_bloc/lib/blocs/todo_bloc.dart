@@ -1,6 +1,3 @@
-// TodoBloc - BLoC chính quản lý danh sách todos
-// Demo đầy đủ các tính năng của BLoC pattern
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import '../events/todo_event.dart';
@@ -8,74 +5,77 @@ import '../states/todo_state.dart';
 import '../repositories/todo_repository.dart';
 import '../models/todo.dart';
 
+// TodoBloc - BLoC  quản lý danh sách todos
+// Định nghĩa khi nhận được event nào thì sẽ chạy hàm handler state nào
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final TodoRepository repository;
 
   // Constructor: Inject repository dependency vào BLoC
-  // Initial state là TodoInitial
-  TodoBloc({required this.repository}) : super(const TodoInitial()) {
+  // Initial state là TodoInitialState : khởi tạo state ban đầu là TodoInitialState()
+  TodoBloc({required this.repository}) : super(const TodoInitialState()) {
     // Đăng ký các event handlers
     // Mỗi event sẽ có một handler tương ứng
-    
-    // Handler cho TodoLoadRequested
-    // Sử dụng restartable transformer: nếu event mới được gửi trong khi đang xử lý,
-    // cancel operation cũ và bắt đầu operation mới
-    on<TodoLoadRequested>(
+
+    // Handler cho TodoLoadRequestedEvent
+    on<TodoLoadRequestedEvent>(
       _onLoadRequested,
       transformer: restartable(),
     );
+    // Sử dụng restartable transformer: nếu event mới được gửi trong khi đang xử lý
+    // => cancel operation cũ và bắt đầu operation mới
 
-    // Handler cho TodoAdded
-    on<TodoAdded>(_onTodoAdded);
+    // Handler cho TodoAddedEvent
+    on<TodoAddedEvent>(_onTodoAdded);
 
-    // Handler cho TodoUpdated
-    on<TodoUpdated>(_onTodoUpdated);
+    // Handler cho TodoUpdatedEvent
+    on<TodoUpdatedEvent>(_onTodoUpdated);
 
-    // Handler cho TodoDeleted
-    on<TodoDeleted>(_onTodoDeleted);
+    // Handler cho TodoDeletedEvent
+    on<TodoDeletedEvent>(_onTodoDeleted);
 
-    // Handler cho TodoToggled
-    on<TodoToggled>(_onTodoToggled);
+    // Handler cho TodoToggledEvent
+    on<TodoToggledEvent>(_onTodoToggled);
 
-    // Handler cho TodoClearCompleted
-    on<TodoClearCompleted>(_onClearCompleted);
+    // Handler cho TodoClearCompletedEvent
+    on<TodoClearCompletedEvent>(_onClearCompleted);
 
-    // Handler cho TodoToggleAll
-    on<TodoToggleAll>(_onToggleAll);
+    // Handler cho TodoToggleAllEvent
+    on<TodoToggleAllEvent>(_onToggleAll);
   }
 
   // Handler: Load todos từ repository
   Future<void> _onLoadRequested(
-    TodoLoadRequested event,
+    TodoLoadRequestedEvent event,
     Emitter<TodoState> emit,
   ) async {
     // Emit loading state
-    emit(const TodoLoading());
+    emit(const TodoLoadingState());
 
     try {
       // Gọi repository để lấy dữ liệu
       final todos = await repository.getTodos();
-      
-      // Emit success state với dữ liệu
-      emit(TodoLoaded(todos));
+
+      // Emit lấy dữ liệu danh sách todo thành công từ repository
+      emit(TodoLoadedState(todos));
     } catch (error) {
       // Emit error state nếu có lỗi
-      emit(TodoError(error.toString()));
+      emit(TodoErrorState(error.toString()));
     }
   }
 
-  // Handler: Thêm todo mới
+  // Handler: Thêm todo mới vào danh sách todo
   Future<void> _onTodoAdded(
-    TodoAdded event,
+    TodoAddedEvent event,
     Emitter<TodoState> emit,
   ) async {
-    // Chỉ xử lý khi state hiện tại là TodoLoaded
-    if (state is! TodoLoaded) return;
+    // Chỉ xử lý khi state hiện tại là TodoLoadedState
+    if (state is! TodoLoadedState) return;
 
-    final currentState = state as TodoLoaded;
-    
+    // Danh sách todo === state hiện tại
+    final currentState = state as TodoLoadedState;
+
     // Emit operation in progress
-    emit(TodoOperationInProgress(currentState.todos));
+    emit(TodoOperationInProgressState(currentState.todos));
 
     try {
       // Tạo todo mới
@@ -92,112 +92,112 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       // Lấy lại danh sách todos mới
       final updatedTodos = await repository.getTodos();
 
-      // Emit success state
-      emit(TodoOperationSuccess(updatedTodos, 'Thêm todo thành công'));
+      // Emit success state - cập nhật danh sách todo mới trong state của bloc
+      emit(TodoOperationSuccessState(updatedTodos, 'Thêm todo thành công'));
     } catch (error) {
-      // Emit error state, nhưng vẫn giữ danh sách todos hiện tại
-      emit(TodoError(error.toString()));
-      emit(TodoLoaded(currentState.todos));
+      // Trong trường hợp thêm thất bại thì vẫn giữ danh sách todo cũ
+      emit(TodoErrorState(error.toString()));
+      emit(TodoLoadedState(currentState.todos));
     }
   }
 
   // Handler: Cập nhật todo
   Future<void> _onTodoUpdated(
-    TodoUpdated event,
+    TodoUpdatedEvent event,
     Emitter<TodoState> emit,
   ) async {
-    if (state is! TodoLoaded) return;
+    if (state is! TodoLoadedState) return;
 
-    final currentState = state as TodoLoaded;
-    emit(TodoOperationInProgress(currentState.todos));
+    final currentState = state as TodoLoadedState;
+    emit(TodoOperationInProgressState(currentState.todos));
 
     try {
       await repository.updateTodo(event.todo);
       final updatedTodos = await repository.getTodos();
-      emit(TodoOperationSuccess(updatedTodos, 'Cập nhật todo thành công'));
+      emit(TodoOperationSuccessState(updatedTodos, 'Cập nhật todo thành công'));
     } catch (error) {
-      emit(TodoError(error.toString()));
-      emit(TodoLoaded(currentState.todos));
+      emit(TodoErrorState(error.toString()));
+      emit(TodoLoadedState(currentState.todos));
     }
   }
 
   // Handler: Xóa todo
   Future<void> _onTodoDeleted(
-    TodoDeleted event,
+    TodoDeletedEvent event,
     Emitter<TodoState> emit,
   ) async {
-    if (state is! TodoLoaded) return;
+    if (state is! TodoLoadedState) return;
 
-    final currentState = state as TodoLoaded;
-    emit(TodoOperationInProgress(currentState.todos));
+    final currentState = state as TodoLoadedState;
+    emit(TodoOperationInProgressState(currentState.todos));
 
     try {
       await repository.deleteTodo(event.todoId);
       final updatedTodos = await repository.getTodos();
-      emit(TodoOperationSuccess(updatedTodos, 'Xóa todo thành công'));
+      emit(TodoOperationSuccessState(updatedTodos, 'Xóa todo thành công'));
     } catch (error) {
-      emit(TodoError(error.toString()));
-      emit(TodoLoaded(currentState.todos));
+      emit(TodoErrorState(error.toString()));
+      emit(TodoLoadedState(currentState.todos));
     }
   }
 
   // Handler: Toggle trạng thái todo
   Future<void> _onTodoToggled(
-    TodoToggled event,
+    TodoToggledEvent event,
     Emitter<TodoState> emit,
   ) async {
-    if (state is! TodoLoaded) return;
+    if (state is! TodoLoadedState) return;
 
-    final currentState = state as TodoLoaded;
+    final currentState = state as TodoLoadedState;
 
     try {
       await repository.toggleTodo(event.todoId);
       final updatedTodos = await repository.getTodos();
-      
+
       // Không cần hiển thị success message cho toggle
-      emit(TodoLoaded(updatedTodos));
+      emit(TodoLoadedState(updatedTodos));
     } catch (error) {
-      emit(TodoError(error.toString()));
-      emit(TodoLoaded(currentState.todos));
+      emit(TodoErrorState(error.toString()));
+      emit(TodoLoadedState(currentState.todos));
     }
   }
 
   // Handler: Xóa tất cả todos đã hoàn thành
   Future<void> _onClearCompleted(
-    TodoClearCompleted event,
+    TodoClearCompletedEvent event,
     Emitter<TodoState> emit,
   ) async {
-    if (state is! TodoLoaded) return;
+    if (state is! TodoLoadedState) return;
 
-    final currentState = state as TodoLoaded;
-    emit(TodoOperationInProgress(currentState.todos));
+    final currentState = state as TodoLoadedState;
+    emit(TodoOperationInProgressState(currentState.todos));
 
     try {
       await repository.clearCompleted();
       final updatedTodos = await repository.getTodos();
-      emit(TodoOperationSuccess(updatedTodos, 'Đã xóa todos hoàn thành'));
+      emit(TodoOperationSuccessState(updatedTodos, 'Đã xóa todos hoàn thành'));
     } catch (error) {
-      emit(TodoError(error.toString()));
-      emit(TodoLoaded(currentState.todos));
+      emit(TodoErrorState(error.toString()));
+      emit(TodoLoadedState(currentState.todos));
     }
   }
 
   // Handler: Toggle tất cả todos
   Future<void> _onToggleAll(
-    TodoToggleAll event,
+    TodoToggleAllEvent event,
     Emitter<TodoState> emit,
   ) async {
-    if (state is! TodoLoaded) return;
+    if (state is! TodoLoadedState) return;
 
-    final currentState = state as TodoLoaded;
-    emit(TodoOperationInProgress(currentState.todos));
+    final currentState = state as TodoLoadedState;
+    emit(TodoOperationInProgressState(currentState.todos));
 
     try {
       final todos = currentState.todos;
-      
+
       // Kiểm tra xem tất cả todos đã completed chưa
       final allCompleted = todos.every((todo) => todo.isCompleted);
-      
+
       // Toggle tất cả todos
       for (final todo in todos) {
         if (allCompleted) {
@@ -214,10 +214,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       }
 
       final updatedTodos = await repository.getTodos();
-      emit(TodoLoaded(updatedTodos));
+      emit(TodoLoadedState(updatedTodos));
     } catch (error) {
-      emit(TodoError(error.toString()));
-      emit(TodoLoaded(currentState.todos));
+      emit(TodoErrorState(error.toString()));
+      emit(TodoLoadedState(currentState.todos));
     }
   }
 }

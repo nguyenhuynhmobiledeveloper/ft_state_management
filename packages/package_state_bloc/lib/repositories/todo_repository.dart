@@ -1,11 +1,11 @@
-// Repository chịu trách nhiệm xử lý data layer
-// Trong ví dụ này, data được lưu trong memory, có thể mở rộng để lưu vào database
 import '../models/todo.dart';
 
+// Repository chịu trách nhiệm xử lý thay đổi data và lưu trữ dữ liệu
+// Trong ví dụ này, data được lưu trong memory, có thể mở rộng để lưu vào database
 class TodoRepository {
   // Giả lập database trong memory
   final List<Todo> _todos = [];
-  
+
   // Delay để giả lập async operation (network request, database query...)
   final Duration _delay = const Duration(seconds: 1);
 

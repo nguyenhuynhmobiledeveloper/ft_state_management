@@ -14,6 +14,13 @@ analyzer:
     - ARCHITECTURE_DIAGRAM.dart
     - CHEAT_SHEET.dart
     - INDEX.dart
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   # The lint rules applied to this project can be customized in the

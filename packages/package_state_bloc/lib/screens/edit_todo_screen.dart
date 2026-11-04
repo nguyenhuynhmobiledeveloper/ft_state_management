@@ -29,7 +29,8 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
     super.initState();
     // Khởi tạo controllers với giá trị hiện tại của todo
     _titleController = TextEditingController(text: widget.todo.title);
-    _descriptionController = TextEditingController(text: widget.todo.description);
+    _descriptionController =
+        TextEditingController(text: widget.todo.description);
   }
 
   @override
@@ -48,7 +49,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
       );
 
       // Dispatch event để update todo
-      context.read<TodoBloc>().add(TodoUpdated(updatedTodo));
+      context.read<TodoBloc>().add(TodoUpdatedEvent(updatedTodo));
 
       // Quay lại màn hình trước
       Navigator.pop(context);

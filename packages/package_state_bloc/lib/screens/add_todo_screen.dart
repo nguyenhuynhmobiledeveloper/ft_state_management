@@ -30,11 +30,11 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       // Dispatch event để thêm todo
       // Sử dụng context.read() để access TodoBloc
       context.read<TodoBloc>().add(
-        TodoAdded(
-          title: _titleController.text.trim(),
-          description: _descriptionController.text.trim(),
-        ),
-      );
+            TodoAddedEvent(
+              title: _titleController.text.trim(),
+              description: _descriptionController.text.trim(),
+            ),
+          );
 
       // Quay lại màn hình trước
       Navigator.pop(context);

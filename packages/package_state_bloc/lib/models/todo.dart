@@ -1,7 +1,7 @@
-// Model đại diện cho một Todo item
-// Sử dụng Equatable để so sánh các instance dễ dàng hơn trong BLoC
 import 'package:equatable/equatable.dart';
 
+// Model đại diện cho một Todo item
+// Sử dụng Equatable để so sánh các instance dễ dàng hơn trong BLoC
 class Todo extends Equatable {
   final String id;
   final String title;
@@ -17,7 +17,7 @@ class Todo extends Equatable {
     required this.createdAt,
   });
 
-  // CopyWith method để tạo bản sao với các thuộc tính được cập nhật
+  // CopyWith method để tạo bản sao với các thuộc tính có thể được cập nhật độc lập
   Todo copyWith({
     String? id,
     String? title,

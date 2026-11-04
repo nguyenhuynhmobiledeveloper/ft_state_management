@@ -7,6 +7,7 @@ import '../blocs/todo_bloc.dart';
 import '../states/todo_state.dart';
 import '../models/todo.dart';
 
+// Màn hình thống kê các to do đã làm - đang làm
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
 
@@ -22,7 +23,7 @@ class StatisticsScreen extends StatelessWidget {
       body: BlocConsumer<TodoBloc, TodoState>(
         // Listener: xử lý side effects
         listener: (context, state) {
-          if (state is TodoOperationSuccess) {
+          if (state is TodoOperationSuccessState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -30,7 +31,7 @@ class StatisticsScreen extends StatelessWidget {
               ),
             );
           }
-          if (state is TodoError) {
+          if (state is TodoErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -41,20 +42,20 @@ class StatisticsScreen extends StatelessWidget {
         },
         // Builder: build UI dựa trên state
         builder: (context, state) {
-          if (state is TodoLoading) {
+          if (state is TodoLoadingState) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (state is TodoLoaded) {
+          if (state is TodoLoadedState) {
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: _buildStatistics(context, state.todos),
             );
           }
 
-          if (state is TodoError) {
+          if (state is TodoErrorState) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,8 +87,8 @@ class StatisticsScreen extends StatelessWidget {
     final totalCount = todos.length;
     final completedCount = todos.where((todo) => todo.isCompleted).length;
     final activeCount = totalCount - completedCount;
-    final completionRate = totalCount > 0 
-        ? (completedCount / totalCount * 100).toStringAsFixed(1) 
+    final completionRate = totalCount > 0
+        ? (completedCount / totalCount * 100).toStringAsFixed(1)
         : '0.0';
 
     return Column(
@@ -203,25 +204,26 @@ class StatisticsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   ...todos.take(5).map((todo) => ListTile(
-                    leading: Icon(
-                      todo.isCompleted
-                          ? Icons.check_circle
-                          : Icons.radio_button_unchecked,
-                      color: todo.isCompleted ? Colors.green : Colors.orange,
-                    ),
-                    title: Text(
-                      todo.title,
-                      style: TextStyle(
-                        decoration: todo.isCompleted
-                            ? TextDecoration.lineThrough
-                            : null,
-                      ),
-                    ),
-                    subtitle: Text(
-                      _formatDate(todo.createdAt),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  )),
+                        leading: Icon(
+                          todo.isCompleted
+                              ? Icons.check_circle
+                              : Icons.radio_button_unchecked,
+                          color:
+                              todo.isCompleted ? Colors.green : Colors.orange,
+                        ),
+                        title: Text(
+                          todo.title,
+                          style: TextStyle(
+                            decoration: todo.isCompleted
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                        subtitle: Text(
+                          _formatDate(todo.createdAt),
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -231,7 +233,8 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Icon(icon, size: 40, color: color),
