@@ -5,6 +5,7 @@ import '../bloc/todo_bloc.dart';
 import '../bloc/todo_event.dart';
 import '../bloc/todo_state.dart';
 
+// Màn hình todo sử dụng bloc todo
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
 
@@ -15,6 +16,7 @@ class TodoScreen extends StatefulWidget {
 class _TodoScreenState extends State<TodoScreen> {
   final _controller = TextEditingController();
 
+  // Hàm thêm todo vào danh sách
   void _addTodo() {
     final title = _controller.text.trim();
     if (title.isEmpty) return;
@@ -33,7 +35,10 @@ class _TodoScreenState extends State<TodoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('To-Do List với BLoC')),
+
+      // BLocConsumer : vừa lắng nghe vừa builder
       body: BlocConsumer<TodoBloc, TodoState>(
+        // Nếu mà state lỗi có giá trị thì showSnackBar thể hiện lỗi đó
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(
@@ -42,11 +47,12 @@ class _TodoScreenState extends State<TodoScreen> {
           }
         },
         builder: (context, state) {
+          // Đọc giá trị state đã được lưu trong bloc
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final visibleTodos = state.visibleTodos;
+          final visibleTodos = state.visibleTodos; // Chạy getter để lấy giá trị
 
           return Padding(
             padding: const EdgeInsets.all(16),
@@ -75,6 +81,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                // Lấy ra số lượng todo chưa được hoàn thành
                 Text(
                   'Còn ${state.remainingCount}/${state.todos.length} công việc chưa hoàn thành',
                   style: Theme.of(context).textTheme.titleMedium,
@@ -104,6 +111,7 @@ class _TodoScreenState extends State<TodoScreen> {
                               child: ListTile(
                                 leading: Checkbox(
                                   value: todo.isCompleted,
+                                  // Phát event thay đổi trạng thái của 1 todo
                                   onChanged: (_) => context
                                       .read<TodoBloc>()
                                       .add(TodoToggled(todo.id)),
@@ -118,6 +126,7 @@ class _TodoScreenState extends State<TodoScreen> {
                                 ),
                                 trailing: IconButton(
                                   tooltip: 'Xóa công việc',
+                                  // Phát event xoá 1 todo trong danh sách todo
                                   onPressed: () => context.read<TodoBloc>().add(
                                     TodoDeleted(todo.id),
                                   ),

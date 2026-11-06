@@ -9,7 +9,9 @@ import 'screens/todo_screen.dart';
 /// Initializes Flutter and launches the Todo list example.
 void runPackageStateBlocTodolistApp() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(TodoApp(repository: TodoRepository()));
+  runApp(
+    TodoApp(repository: TodoRepository()),
+  ); // TodoRepository đang không được truyền tham số SharedPreference nên bên trong nó sẽ tự tạo 1 cái mới
 }
 
 class TodoApp extends StatelessWidget {
@@ -26,9 +28,11 @@ class TodoApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
+      // Cung cấp bloc cho widget sử dụng
       home: BlocProvider(
         create: (_) =>
             TodoBloc(repository: repository)..add(const TodosRequested()),
+        // thêm luôn event lấy danh sách todo
         child: const TodoScreen(),
       ),
     );
