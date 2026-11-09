@@ -9,7 +9,7 @@ class Todo extends Equatable {
   final String title;
   final bool isCompleted;
 
-  // Hàm copyWith để tạo 1 đối tượgn todo mới với 1 vài thuộc tính được thay đổi
+  // Hàm copyWith để tạo 1 đối tượnh todo mới với 1 vài thuộc tính được thay đổi
   Todo copyWith({String? title, bool? isCompleted}) {
     return Todo(
       id: id,

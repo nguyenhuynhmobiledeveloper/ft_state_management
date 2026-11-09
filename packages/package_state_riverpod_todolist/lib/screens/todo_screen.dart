@@ -5,41 +5,52 @@ import '../providers/todo_provider.dart';
 import '../providers/todo_state.dart';
 
 // Màn hình todo sử dụng Riverpod, giữ nguyên giao diện của bản RiverPod.
+// ConsumerStatefulWidget: qua widget này có thể dùng ref của RiverPod
 class TodoScreen extends ConsumerStatefulWidget {
   const TodoScreen({super.key});
 
+  // createState tạo ConsumerState, nơi có thể dùng ref để truy cập provider.
   @override
   ConsumerState<TodoScreen> createState() => _TodoScreenState();
 }
 
+// _TodoScreenState quản lý ô nhập và dùng ref để đọc, theo dõi TodoState.
 class _TodoScreenState extends ConsumerState<TodoScreen> {
   final _controller = TextEditingController();
 
+  // initState đăng ký tải danh sách sau khung hình đầu tiên.
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // ref.read(todoProvider.notifier) lấy TodoNotifier để gọi loadTodos một lần.
       if (mounted) ref.read(todoProvider.notifier).loadTodos();
     });
   }
 
   // Hàm thêm todo vào danh sách
+  // _addTodo lấy nội dung ô nhập, gọi TodoNotifier.addTodo rồi xóa ô nhập.
   void _addTodo() {
     final title = _controller.text.trim();
     if (title.isEmpty) return;
 
+    // ref.read : dùng để đọc một lần hoặc gọi 1 function
+    // Đây 1 gọi function có trong Provider
     ref.read(todoProvider.notifier).addTodo(title);
     _controller.clear();
   }
 
+  // dispose giải phóng TextEditingController khi màn hình bị hủy.
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
+  // build vẽ giao diện từ TodoState và đăng ký phản ứng với lỗi.
   @override
   Widget build(BuildContext context) {
+    // ref.listen nghe thay đổi của todoProvider để hiện SnackBar khi có lỗi.
     ref.listen<TodoState>(todoProvider, (previous, state) {
       if (state.errorMessage != null) {
         ScaffoldMessenger.of(
@@ -47,6 +58,8 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
         ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
       }
     });
+
+    // ref.watch theo dõi todoProvider và khiến build chạy lại khi state đổi.
     final state = ref.watch(todoProvider);
 
     return Scaffold(
@@ -59,7 +72,8 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final visibleTodos = state.visibleTodos; // Chạy getter để lấy giá trị
+          // Lấy ra danh sách todo dựa theo trạng thái của state filer
+          final visibleTodos = state.visibleTodos;
 
           return Padding(
             padding: const EdgeInsets.all(16),
@@ -118,6 +132,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                               child: ListTile(
                                 leading: Checkbox(
                                   value: todo.isCompleted,
+                                  // Lấy notifier để gọi toggleTodo khi đổi trạng thái checkbox.
                                   onChanged: (_) => ref
                                       .read(todoProvider.notifier)
                                       .toggleTodo(todo.id),
@@ -132,6 +147,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                                 ),
                                 trailing: IconButton(
                                   tooltip: 'Xóa công việc',
+                                  // Lấy notifier để gọi deleteTodo khi nhấn nút xóa.
                                   onPressed: () => ref
                                       .read(todoProvider.notifier)
                                       .deleteTodo(todo.id),
@@ -150,10 +166,12 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
     );
   }
 
+  // _filterChip tạo nút lọc và gọi changeFilter qua TodoNotifier khi được chọn.
   Widget _filterChip(String label, TodoFilter filter, TodoFilter current) {
     return ChoiceChip(
       label: Text(label),
       selected: current == filter,
+      // Gọi hàm trong NotifierProvider để có thể thay đổi trạng thái của state filter
       onSelected: (_) {
         ref.read(todoProvider.notifier).changeFilter(filter);
       },
