@@ -18,7 +18,7 @@ class Todo extends Equatable {
     );
   }
 
-  // Hàm tạo chuỗi stringJson từ 1 đối tượng
+  // Tạo kiểu dữ liệu dạng giống Object : key - value
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,

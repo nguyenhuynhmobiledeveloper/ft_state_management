@@ -68,13 +68,12 @@ class TodoNotifier extends Notifier<TodoState> {
     final trimmedTitle = title.trim();
     if (trimmedTitle.isEmpty) return;
 
-    await _saveTodos([
-      ...state.todos,
-      Todo(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        title: trimmedTitle,
-      ),
-    ]);
+    final todo = Todo(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      title: trimmedTitle,
+    );
+
+    await _saveTodos([...state.todos, todo]);
   });
 
   /// toggleTodo đảo trạng thái hoàn thành của công việc có id tương ứng.

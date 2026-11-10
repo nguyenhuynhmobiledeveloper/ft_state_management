@@ -1,0 +1,19 @@
+name: package_state_provider_todolist
+description: Todo list example using Provider and shared preferences.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.5+1
+  equatable: ^2.1.0
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  shared_preferences_platform_interface: ^2.4.2

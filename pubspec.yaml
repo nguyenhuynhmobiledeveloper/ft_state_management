@@ -40,6 +40,8 @@ dependencies:
     path: packages/package_state_bloc_todolist
   package_state_riverpod_todolist:
     path: packages/package_state_riverpod_todolist
+  package_state_provider_todolist:
+    path: packages/package_state_provider_todolist
 
 dev_dependencies:
   flutter_test:
