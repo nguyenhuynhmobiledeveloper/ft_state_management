@@ -2,6 +2,14 @@ Ví dụ quản lý state bằng Flutter SDK:
 
 - [package_state_ValueNotifier](packages/package_state_ValueNotifier/README.md): 8 ví dụ cơ bản.
 - [package_state_ValueNotifier_todolist](packages/package_state_ValueNotifier_todolist/README.md): ứng dụng To-do riêng.
+- [package_state_ChangeNotifier](packages/package_state_ChangeNotifier/README.md): 10 ví dụ ChangeNotifier, không có To-do List.
+
+Chạy bộ ví dụ ChangeNotifier từ thư mục gốc:
+
+```sh
+flutter pub get
+flutter run -t lib/main_change_notifier.dart
+```
 
 Chạy bộ 8 ví dụ ValueNotifier từ thư mục gốc:
 

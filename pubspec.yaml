@@ -46,6 +46,8 @@ dependencies:
     path: packages/package_state_ValueNotifier
   package_state_value_notifier_todolist:
     path: packages/package_state_ValueNotifier_todolist
+  package_state_change_notifier:
+    path: packages/package_state_ChangeNotifier
 
 dev_dependencies:
   flutter_test:
