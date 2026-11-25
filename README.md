@@ -1,3 +1,21 @@
+Ví dụ quản lý state bằng Flutter SDK:
+
+- [package_state_ValueNotifier](packages/package_state_ValueNotifier/README.md): 8 ví dụ cơ bản.
+- [package_state_ValueNotifier_todolist](packages/package_state_ValueNotifier_todolist/README.md): ứng dụng To-do riêng.
+
+Chạy bộ 8 ví dụ ValueNotifier từ thư mục gốc:
+
+```sh
+flutter pub get
+flutter run
+```
+
+Chạy riêng To-do với ValueNotifier:
+
+```sh
+flutter run -t lib/main_value_notifier_todolist.dart
+```
+
 27/9/2022: Học về Quản lý state Bằng Bloc 
 
 

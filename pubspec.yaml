@@ -42,6 +42,10 @@ dependencies:
     path: packages/package_state_riverpod_todolist
   package_state_provider_todolist:
     path: packages/package_state_provider_todolist
+  package_state_value_notifier:
+    path: packages/package_state_ValueNotifier
+  package_state_value_notifier_todolist:
+    path: packages/package_state_ValueNotifier_todolist
 
 dev_dependencies:
   flutter_test:
