@@ -8,6 +8,7 @@ class ToggleExample extends StatefulWidget {
 }
 
 class _ToggleExampleState extends State<ToggleExample> {
+  // Giá trị ValueNotifier dạng bool
   final _hidePassword = ValueNotifier<bool>(true);
 
   @override
@@ -25,8 +26,9 @@ class _ToggleExampleState extends State<ToggleExample> {
         child: ValueListenableBuilder<bool>(
           valueListenable: _hidePassword,
           builder: (context, isHidden, child) {
+            debugPrint('isHidden $isHidden');
             return TextField(
-              obscureText: isHidden,
+              obscureText: isHidden, // Ẩn văn bản
               decoration: InputDecoration(
                 labelText: 'Nhập mật khẩu thử nghiệm',
                 border: const OutlineInputBorder(),

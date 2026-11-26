@@ -35,6 +35,7 @@ class _TextInputExampleState extends State<TextInputExample> {
               ),
             ),
             const SizedBox(height: 16),
+            // Giá trị TextEditingValue : giá trị lưu trữ trong TextField
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _text,
               builder: (context, editingValue, child) {

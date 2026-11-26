@@ -10,6 +10,7 @@ class SharedStateExample extends StatefulWidget {
 }
 
 class _SharedStateExampleState extends State<SharedStateExample> {
+  // Tạo ra 1 giá trị ValueNotifier - sau đó sẽ đượct truyền vào cho CounterScope
   final _counter = ValueNotifier<int>(0);
 
   @override
@@ -24,6 +25,7 @@ class _SharedStateExampleState extends State<SharedStateExample> {
   }
 }
 
+// Màn hình thứ nhất
 class _FirstScreen extends StatelessWidget {
   const _FirstScreen();
 
@@ -41,7 +43,9 @@ class _FirstScreen extends StatelessWidget {
             const _IncrementButton(),
             OutlinedButton(
               onPressed: () {
+                // Lấy ra giá trị counter được lấy từ CounterScope
                 final counter = CounterScope.read(context);
+                // Chuyển sang màn hình thứ 2
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     // Route mới không tự nằm dưới scope của route hiện tại.
@@ -62,6 +66,7 @@ class _FirstScreen extends StatelessWidget {
   }
 }
 
+// Màn hình thứ 2
 class _SecondScreen extends StatelessWidget {
   const _SecondScreen();
 
@@ -80,6 +85,7 @@ class _SecondScreen extends StatelessWidget {
   }
 }
 
+// Widget common để sử dụng chung
 class _CounterValue extends StatelessWidget {
   const _CounterValue();
 
@@ -90,12 +96,14 @@ class _CounterValue extends StatelessWidget {
   }
 }
 
+// Widget common để sử dụng chung
 class _IncrementButton extends StatelessWidget {
   const _IncrementButton();
 
   @override
   Widget build(BuildContext context) {
     return FilledButton(
+      // Tăng gía trị của state trong CounterScope lên 1
       onPressed: () => CounterScope.read(context).value++,
       child: const Text('Tăng bộ đếm chung'),
     );

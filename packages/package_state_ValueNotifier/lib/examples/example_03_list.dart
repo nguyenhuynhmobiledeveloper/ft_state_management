@@ -8,9 +8,11 @@ class ListExample extends StatefulWidget {
 }
 
 class _ListExampleState extends State<ListExample> {
+  // Gía trị ValueNotifier dạng List<String>
   final _items = ValueNotifier<List<String>>(const []);
   int _nextNumber = 1;
 
+  // Hàm thêm item
   void _addItem() {
     // SAI với list có thể sửa: _items.value.add('Mới');
     // Sửa tại chỗ không đi qua setter value nên không phát thông báo.
@@ -18,6 +20,7 @@ class _ListExampleState extends State<ListExample> {
     _items.value = [..._items.value, 'Mục ${_nextNumber++}'];
   }
 
+  // Hàm xoá item khỏi mảng
   void _removeItem(int index) {
     final newItems = [..._items.value];
     newItems.removeAt(index);
@@ -45,6 +48,7 @@ class _ListExampleState extends State<ListExample> {
           FilledButton(onPressed: _addItem, child: const Text('Thêm một mục')),
           Expanded(
             child: ValueListenableBuilder<List<String>>(
+              // Lấy ra danh sách item của ValueNotifier
               valueListenable: _items,
               builder: (context, items, child) {
                 if (items.isEmpty) {

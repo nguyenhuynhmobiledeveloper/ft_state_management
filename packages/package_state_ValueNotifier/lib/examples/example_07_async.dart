@@ -11,6 +11,7 @@ class AsyncExample extends StatefulWidget {
 }
 
 class _AsyncExampleState extends State<AsyncExample> {
+  // ValueNotifier và ValueListenable đã nằm trong MessageController()
   final _controller = MessageController();
 
   @override
@@ -35,10 +36,12 @@ class _AsyncExampleState extends State<AsyncExample> {
             Wrap(
               spacing: 8,
               children: [
+                // Giả lập Call API load dữ liệu
                 FilledButton(
                   onPressed: () => _controller.load(),
                   child: const Text('Tải thành công'),
                 ),
+                // Giả lập call api lỗi
                 OutlinedButton(
                   onPressed: () => _controller.load(shouldFail: true),
                   child: const Text('Giả lập lỗi'),
@@ -46,6 +49,7 @@ class _AsyncExampleState extends State<AsyncExample> {
               ],
             ),
             const SizedBox(height: 24),
+            // Lấy các giá trị của _controller.state - Hiển thị các view khác nhau với từng loại status khác nhau
             ValueListenableBuilder<MessageState>(
               valueListenable: _controller.state,
               builder: (context, state, child) {

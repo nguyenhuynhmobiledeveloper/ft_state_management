@@ -9,14 +9,17 @@ class MultipleNotifiersExample extends StatefulWidget {
 }
 
 class _MultipleNotifiersExampleState extends State<MultipleNotifiersExample> {
+  // Giá trị ValueNotifier dạng int , double
   final _quantity = ValueNotifier<int>(1);
   final _unitPrice = ValueNotifier<double>(20);
+  // class Listenable : Để tạo 1 đối tượng để lắng nghe
   late final Listenable _changes;
 
   @override
   void initState() {
     super.initState();
     // Danh sách đầu vào cố định; không thêm / xóa nguồn sau khi merge.
+    // Đưa 2 giá trị ValueNotifier vào trong Listenable
     _changes = Listenable.merge([_quantity, _unitPrice]);
   }
 
@@ -34,10 +37,11 @@ class _MultipleNotifiersExampleState extends State<MultipleNotifiersExample> {
       appBar: AppBar(title: const Text('05. Nhiều notifier')),
       body: Padding(
         padding: const EdgeInsets.all(16),
+        // Builder khi lắng nghe giá trị
         child: ListenableBuilder(
           listenable: _changes,
           builder: (context, child) {
-            // ListenableBuilder không truyền value; tự đọc các nguồn.
+            // ListenableBuilder không truyền value; tự đọc từ các nguồn.
             final quantity = _quantity.value;
             final price = _unitPrice.value;
             return Column(

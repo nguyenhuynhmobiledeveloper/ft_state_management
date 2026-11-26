@@ -13,6 +13,7 @@ class _ManualListenerExampleState extends State<ManualListenerExample> {
   final _counterA = ValueNotifier<int>(0);
   final _counterB = ValueNotifier<int>(0);
   final _useA = ValueNotifier<bool>(true);
+  // Tự mỗi cái ValueNotifier lắng nghe - không sử dụng gộp bằng Listenable
 
   @override
   void dispose() {
@@ -28,6 +29,8 @@ class _ManualListenerExampleState extends State<ManualListenerExample> {
       appBar: AppBar(title: const Text('06. Listener thủ công')),
       body: Padding(
         padding: const EdgeInsets.all(16),
+
+        // Lắng nghe _useA
         child: ValueListenableBuilder<bool>(
           valueListenable: _useA,
           builder: (context, useA, child) {
@@ -46,6 +49,7 @@ class _ManualListenerExampleState extends State<ManualListenerExample> {
                     value: useA,
                     onChanged: (value) => _useA.value = value,
                   ),
+                  // Lắng nghe couterA hoặc couterB
                   ValueListenableBuilder<int>(
                     valueListenable: counter,
                     builder: (context, count, child) => Text('Giá trị: $count'),

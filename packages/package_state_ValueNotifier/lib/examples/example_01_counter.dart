@@ -9,6 +9,7 @@ class CounterExample extends StatefulWidget {
 
 class _CounterExampleState extends State<CounterExample> {
   // Tạo một lần trong State, KHÔNG tạo lại trong build().
+  // state của widget này có dạng là 1 ValueNotifier
   final _count = ValueNotifier<int>(0);
 
   @override
@@ -26,6 +27,7 @@ class _CounterExampleState extends State<CounterExample> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // ValueListenableBuilder : builder thay đổi khi lắng nghe giá trị thay đổi từ ValueNotifier
             ValueListenableBuilder<int>(
               valueListenable: _count,
               // Phần cố định không cần tạo lại mỗi lần count thay đổi.
@@ -50,6 +52,7 @@ class _CounterExampleState extends State<CounterExample> {
                   child: const Text('-1'),
                 ),
                 FilledButton(
+                  // Thay đổi giá trị của ValueNotifier : thay vì sử dụng setState
                   onPressed: () => _count.value++,
                   child: const Text('+1'),
                 ),

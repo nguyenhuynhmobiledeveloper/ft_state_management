@@ -6,7 +6,9 @@ class CounterNotice extends StatefulWidget {
   const CounterNotice({super.key, required this.counter, required this.child});
 
   // Chỉ cần quyền đọc và lắng nghe, không cần quyền gán value.
-  final ValueListenable<int> counter;
+  // Thuộc tính nhận giá trị ValueNotifier
+  // final ValueListenable<int> counter;
+  final ValueNotifier<int> counter;
   final Widget child;
 
   @override
@@ -30,6 +32,7 @@ class _CounterNoticeState extends State<CounterNotice> {
     }
   }
 
+  // Hàm hiển thị cột mốc
   void _showMilestone() {
     final count = widget.counter.value;
     if (!mounted || count <= 0 || count % 3 != 0) return;
@@ -46,6 +49,7 @@ class _CounterNoticeState extends State<CounterNotice> {
     super.dispose();
   }
 
+  // Vẽ lại tham số child được truyền vào widget
   @override
   Widget build(BuildContext context) => widget.child;
 }
