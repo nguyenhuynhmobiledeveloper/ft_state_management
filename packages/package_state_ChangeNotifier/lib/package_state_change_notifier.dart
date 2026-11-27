@@ -1,4 +1,4 @@
-/// Các ví dụ học ChangeNotifier chỉ dùng các class trong Flutter SDK.
+/// Các ví dụ học ChangeNotifier, có ví dụ phát âm thanh bằng audioplayers.
 library;
 
 export 'examples/example_01_counter.dart';

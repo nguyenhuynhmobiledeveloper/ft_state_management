@@ -1,5 +1,5 @@
 name: package_state_change_notifier
-description: Các ví dụ học ChangeNotifier chỉ sử dụng Flutter SDK.
+description: Các ví dụ học ChangeNotifier, có ví dụ phát âm thanh thực tế.
 version: 1.0.0
 publish_to: none
 
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +19,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/audio/de_danh_cho_em.mp3

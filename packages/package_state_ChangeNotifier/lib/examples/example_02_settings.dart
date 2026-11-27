@@ -10,6 +10,7 @@ class SettingsExample extends StatefulWidget {
 }
 
 class _SettingsExampleState extends State<SettingsExample> {
+  // SettingsModel bên trong đã extend từ ChangeNotifier : quản lý nhiều giá trị state
   final _settings = SettingsModel();
 
   @override
@@ -32,6 +33,8 @@ class _SettingsExampleState extends State<SettingsExample> {
                 'Một model giữ cả màu nền và cỡ chữ. '
                 'Nút áp dụng đổi hai field nhưng chỉ thông báo một lần.',
               ),
+              // Thay đổi các giá trị state trong ChangeNotifier
+              // Switch để thay đổi giá trị
               SwitchListTile(
                 title: const Text('Nền tối cho phần xem trước'),
                 value: _settings.isDark,
@@ -42,9 +45,21 @@ class _SettingsExampleState extends State<SettingsExample> {
                 value: _settings.fontSize,
                 min: 14,
                 max: 30,
-                divisions: 8,
+                divisions: 20, // Độ chia của slider
                 onChanged: _settings.setFontSize,
               ),
+
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => _settings.update(isDark: true, fontSize: 26),
+                child: const Text('Áp dụng nền tối + chữ 26'),
+              ),
+              TextButton(
+                onPressed: _settings.reset,
+                child: const Text('Khôi phục'),
+              ),
+
+              // Phần sử dụng các gía trị state trong ChangeNotifier
               Container(
                 padding: const EdgeInsets.all(24),
                 color: _settings.isDark ? Colors.black87 : Colors.grey.shade100,
@@ -55,15 +70,6 @@ class _SettingsExampleState extends State<SettingsExample> {
                     color: _settings.isDark ? Colors.white : Colors.black,
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              FilledButton(
-                onPressed: () => _settings.update(isDark: true, fontSize: 26),
-                child: const Text('Áp dụng nền tối + chữ 26'),
-              ),
-              TextButton(
-                onPressed: _settings.reset,
-                child: const Text('Khôi phục'),
               ),
             ],
           );

@@ -16,7 +16,7 @@ class _CounterListenerState extends State<CounterListener> {
   @override
   void initState() {
     super.initState();
-    widget.counter.addListener(_onChanged);
+    widget.counter.addListener(_onChanged); // Vào cái là lắng nghe luôn
   }
 
   @override
@@ -29,11 +29,13 @@ class _CounterListenerState extends State<CounterListener> {
     // Flutter sẽ build lại sau didUpdateWidget, không cần setState ở đây.
   }
 
+  // Hàm sẽ chạy khi lắng nghe gía trị của ChangeNotifier
   void _onChanged() {
     if (!mounted) return;
     setState(() {}); // Đọc count mới trong build.
 
     final count = widget.counter.count;
+    // Lắng nghe để show snackbar
     if (count > 0 && count % 3 == 0) {
       ScaffoldMessenger.of(
         context,

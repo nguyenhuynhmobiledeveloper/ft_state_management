@@ -12,6 +12,8 @@ class MessageModel extends ChangeNotifier {
   LoadStatus _status = LoadStatus.initial;
   String _message = '';
   String _errorMessage = '';
+
+  // Thuộc tính để xử lý khi bị spam yêu cầu quá nhiều lần
   int _requestId = 0;
   bool _disposed = false;
 
@@ -21,6 +23,8 @@ class MessageModel extends ChangeNotifier {
 
   Future<void> load({bool shouldFail = false}) async {
     if (_disposed) return;
+
+    // Tăng id  của yêu cầu
     final requestId = ++_requestId;
 
     _status = LoadStatus.loading;
@@ -30,6 +34,7 @@ class MessageModel extends ChangeNotifier {
 
     try {
       final result = await _repository.fetch(shouldFail: shouldFail);
+      // Nếu fetch throw Exception thì sẽ lọt vào catch
       // Không ghi state khi đã dispose hoặc một yêu cầu mới hơn đã bắt đầu.
       if (_disposed || requestId != _requestId) return;
       _message = result;

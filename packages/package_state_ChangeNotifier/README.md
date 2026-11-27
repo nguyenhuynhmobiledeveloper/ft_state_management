@@ -1,8 +1,9 @@
 # Học ChangeNotifier bằng Flutter SDK
 
 10 ví dụ nhỏ, có chú thích tiếng Việt và menu để bấm thử. Mỗi màn hình tập trung
-vào một tình huống, không có To-do List. Mã ứng dụng chỉ dùng Flutter SDK và
-Dart SDK; `flutter_test` và `flutter_lints` chỉ dùng khi phát triển.
+vào một tình huống, không có To-do List. Các ví dụ dùng Flutter SDK và
+Dart SDK; riêng ví dụ 10 dùng thêm `audioplayers` để phát file MP3.
+`flutter_test` và `flutter_lints` chỉ dùng khi phát triển.
 
 Tên thư mục giữ đúng yêu cầu: `package_state_ChangeNotifier`.
 Tên package trong Dart là `package_state_change_notifier` theo quy tắc
@@ -49,12 +50,12 @@ void main() => runPackageStateChangeNotifierApp();
 | 07. Bất đồng bộ | [message_model.dart](lib/models/message_model.dart), [message_repository.dart](lib/repositories/message_repository.dart) | [example_07_async.dart](lib/examples/example_07_async.dart) | Loading, lỗi, thử lại; bấm liên tiếp hoặc rời màn hình khi đang tải |
 | 08. FocusNode | `FocusNode` có sẵn trong SDK | [example_08_focus_node.dart](lib/examples/example_08_focus_node.dart) | Chạm ô nhập và bỏ focus; cập nhật dòng thông báo và viền |
 | 09. ScrollController | `ScrollController` có sẵn trong SDK | [example_09_scroll_controller.dart](lib/examples/example_09_scroll_controller.dart) | Cuộn danh sách, theo dõi offset, quay về đầu |
-| 10. Mixin | [player_model.dart](lib/models/player_model.dart) | [example_10_mixin.dart](lib/examples/example_10_mixin.dart) | Phát / dừng giả lập; dùng `with ChangeNotifier` khi đã có class cha |
+| 10. Mixin | [player_model.dart](lib/models/player_model.dart) | [example_10_mixin.dart](lib/examples/example_10_mixin.dart) | Phát / dừng bài Để dành cho em; dùng `with ChangeNotifier` khi đã có class cha |
 
 Mỗi ví dụ tự sở hữu và giải phóng model. Rời ví dụ về menu rồi mở lại sẽ khởi
 tạo lại state. Riêng hai màn hình bên trong ví dụ 06 dùng chung model cho đến
-khi thoát cả ví dụ. Không lưu dữ liệu xuống ổ đĩa; không gọi mạng và không phát
-âm thanh thật.
+khi thoát cả ví dụ. Không lưu state xuống ổ đĩa và không gọi mạng. Ví dụ 10
+phát file MP3 đóng gói trong package; rời màn hình sẽ dừng phát.
 
 ## 2. Các class và khái niệm liên quan
 
@@ -239,7 +240,14 @@ như `onAttach`, `onDetach` và `ScrollMetricsNotification`.
 
 **Mixin:** khi model đã `extends AudioDevice`, dùng `with ChangeNotifier` để
 thêm cơ chế listener. UI vẫn nghe bằng `ListenableBuilder` như cách kế thừa
-trực tiếp. `PlayerModel` chỉ giả lập trạng thái phát / dừng để giữ code ngắn.
+trực tiếp. `PlayerModel` dùng `audioplayers` phát asset
+`assets/audio/de_danh_cho_em.mp3`, là bản sao của file `de_danh _cho_em.mp3`.
+Bấm **Phát** để nghe, **Dừng** để dừng và đưa bài về đầu. Model nghe trạng
+thái player để cập nhật UI cả khi bài hát kết thúc, chặn thao tác liên tiếp
+khi đang xử lý, báo lỗi nếu không phát được và dispose player khi rời màn hình.
+
+Sau khi thêm plugin, dừng ứng dụng rồi chạy lại hoàn toàn để nạp phần native;
+hot reload không đủ. Xem [hướng dẫn audioplayers](https://github.com/bluefireteam/audioplayers/blob/main/getting_started.md).
 
 ## Cấu trúc
 

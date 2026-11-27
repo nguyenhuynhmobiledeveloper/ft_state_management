@@ -9,6 +9,7 @@ class FocusNodeExample extends StatefulWidget {
 
 class _FocusNodeExampleState extends State<FocusNodeExample> {
   // FocusNode có sẵn cơ chế ChangeNotifier, không cần model bọc bên ngoài.
+  // FocusNode đã được extends sẵn ChangeNotifier
   final _focus = FocusNode();
 
   @override
@@ -52,6 +53,7 @@ class _FocusNodeExampleState extends State<FocusNodeExample> {
                 );
               },
             ),
+            // Thay đổi giá trị focus của Changenotifier
             TextButton(
               onPressed: _focus.unfocus,
               child: const Text('Bỏ focus'),

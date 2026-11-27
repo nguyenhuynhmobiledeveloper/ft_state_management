@@ -12,10 +12,12 @@ class SettingsModel extends ChangeNotifier {
     update(isDark: value, fontSize: _fontSize);
   }
 
+  // Thay đổi font thì isDark vẫn giữ nguyên giá trị cũ
   void setFontSize(double value) {
     update(isDark: _isDark, fontSize: value);
   }
 
+  // Cập nhật giá trị state xong thông báo
   void update({required bool isDark, required double fontSize}) {
     final validSize = fontSize.clamp(14.0, 30.0).toDouble();
     if (_isDark == isDark && _fontSize == validSize) return;

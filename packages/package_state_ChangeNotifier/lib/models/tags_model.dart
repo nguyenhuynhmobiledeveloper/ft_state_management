@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+// Đối tượng thẻ trong danh sách
 class TagsModel extends ChangeNotifier {
   final List<String> _tags = ['Flutter'];
 
@@ -7,6 +8,7 @@ class TagsModel extends ChangeNotifier {
   List<String> get tags => List.unmodifiable(_tags);
   int get count => _tags.length;
 
+  // Thêm thẻ vào danh sách
   void add(String text) {
     final tag = text.trim();
     if (tag.isEmpty || _tags.contains(tag)) return;
@@ -16,11 +18,13 @@ class TagsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Xoá thẻ khỏi danh sách
   void remove(String tag) {
     if (!_tags.remove(tag)) return;
     notifyListeners();
   }
 
+  // Xoá toàn bộ danh sách thẻ
   void clear() {
     if (_tags.isEmpty) return;
     _tags.clear();

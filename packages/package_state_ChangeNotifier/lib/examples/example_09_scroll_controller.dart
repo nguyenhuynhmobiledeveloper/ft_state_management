@@ -9,7 +9,8 @@ class ScrollControllerExample extends StatefulWidget {
 }
 
 class _ScrollControllerExampleState extends State<ScrollControllerExample> {
-  final _scroll = ScrollController(); // Kế thừa ChangeNotifier.
+  // ScrollController đã được kế thừa sẵn ChangeNotifier.
+  final _scroll = ScrollController();
 
   @override
   void dispose() {
@@ -27,6 +28,7 @@ class _ScrollControllerExampleState extends State<ScrollControllerExample> {
             listenable: _scroll,
             builder: (context, child) {
               // offset chỉ đọc được khi controller đã gắn vào một scrollable.
+              // offset : khoảng cách đã cuộn của Scroll
               final offset = _scroll.hasClients ? _scroll.offset : 0.0;
               return Padding(
                 padding: const EdgeInsets.all(16),
@@ -47,6 +49,7 @@ class _ScrollControllerExampleState extends State<ScrollControllerExample> {
           TextButton(
             onPressed: () {
               if (!_scroll.hasClients) return;
+              // Dùng controller đẻ điều khiển scroll tới item 0
               _scroll.animateTo(
                 0,
                 duration: const Duration(milliseconds: 300),

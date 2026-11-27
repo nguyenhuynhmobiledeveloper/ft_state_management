@@ -20,6 +20,7 @@ class _MultipleNotifiersExampleState extends State<MultipleNotifiersExample> {
   void initState() {
     super.initState();
     // Iterable này phải giữ nguyên các nguồn sau khi merge.
+    // Kết hợp các ChangeNotifier vào để lắng gnhe cùng lúc - để có thể kết hợp giá trị luôn
     _changes = Listenable.merge([_quantity, _price]);
   }
 

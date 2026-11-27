@@ -9,10 +9,12 @@ class TagsExample extends StatefulWidget {
   State<TagsExample> createState() => _TagsExampleState();
 }
 
+// Ví dụ thêm thẻ vào danh sách
 class _TagsExampleState extends State<TagsExample> {
   final _tags = TagsModel();
-  final _input = TextEditingController();
+  final _input = TextEditingController(); // controller để điều khiển TextField
 
+  // Hàm button thêm thẻ vào danh sách
   void _addTag() {
     _tags.add(_input.text);
     _input.clear();

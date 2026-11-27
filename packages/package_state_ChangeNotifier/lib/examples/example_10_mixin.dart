@@ -29,8 +29,10 @@ class _MixinExampleState extends State<MixinExample> {
           children: [
             const Text(
               'PlayerModel extends AudioDevice with ChangeNotifier. '
-              'Đây chỉ là trạng thái phát / dừng giả lập, không phát âm thanh.',
+              'Bấm Phát để nghe file âm thanh, bấm Dừng để dừng bài hát.',
             ),
+            const SizedBox(height: 12),
+            const Text('Bài hát: Để dành cho em'),
             Text('Thiết bị: ${_player.name}'),
             ListenableBuilder(
               listenable: _player,
@@ -39,9 +41,22 @@ class _MixinExampleState extends State<MixinExample> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(_player.isPlaying ? 'Đang phát' : 'Đã dừng'),
+                    if (_player.error != null)
+                      Text(
+                        _player.error!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
                     FilledButton(
-                      onPressed: _player.toggle,
-                      child: Text(_player.isPlaying ? 'Dừng' : 'Phát'),
+                      onPressed: _player.isBusy ? null : _player.toggle,
+                      child: Text(
+                        _player.isBusy
+                            ? 'Đang xử lý...'
+                            : _player.isPlaying
+                            ? 'Dừng'
+                            : 'Phát',
+                      ),
                     ),
                   ],
                 );
